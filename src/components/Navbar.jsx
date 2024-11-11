@@ -27,6 +27,7 @@ const Navbar = () => {
         <button 
           className="px-6 py-3 text-2xl font-bold border-2 border-[#8C1A11] text-[#8C1A11] rounded-full hover:bg-[#8C1A11] hover:text-white transition-colors duration-200 shadow-sm"
           style={{ fontFamily: 'Poppins, sans-serif' }}
+          onClick={() => navigate('/upload')}
         >
           Report
         </button>
