@@ -1,18 +1,21 @@
 import React from 'react'
 import { Search, MessageCircle, User } from 'lucide-react'
+import { useNavigate } from 'react-router-dom' // Import useNavigate
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'tailwindcss/tailwind.css' // Make sure Tailwind CSS is imported
 import '@fontsource/poppins' // Import the Poppins font
 
 const Navbar = () => {
+  const navigate = useNavigate() // Initialize navigate function
+
   return (
     <header 
       className="w-full py-4 px-6 border-b flex items-center justify-between shadow-lg" 
       style={{ backgroundColor: '#F5F5F5', fontFamily: 'Poppins, sans-serif' }}
     >
       <button 
-        className="text-5xl font-extrabold font-black text-left focus:outline-none hover:scale-105 transition-transform duration-200" 
-        style={{ color: '#011F5B', fontFamily: 'Poppins, sans-serif'}}
+        className="text-5xl font-black text-left focus:outline-none hover:scale-105 transition-transform duration-200" 
+        style={{ color: '#011F5B', fontFamily: 'Poppins, sans-serif' }}
         onClick={() => window.location.href = '/'} // Change this as needed
       >
         LOST@PENN
@@ -27,7 +30,11 @@ const Navbar = () => {
         >
           Report
         </button>
-        <button className="p-3 hover:scale-110 transition-transform duration-200" style={{ color: '#011F5B' }}>
+        <button 
+          className="p-3 hover:scale-110 transition-transform duration-200" 
+          style={{ color: '#011F5B' }}
+          onClick={() => navigate('/chat')} // Navigate to /chat when clicked
+        >
           <MessageCircle size={30} strokeWidth={2} />
         </button>
         <button className="p-3 hover:scale-110 transition-transform duration-200">
