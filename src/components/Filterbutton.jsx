@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Filterbutton = ({ name, color, textcolor }) => {
+const Filterbutton = ({ name, color, textcolor, opt1, opt2, opt3 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -20,9 +20,9 @@ const Filterbutton = ({ name, color, textcolor }) => {
       {isOpen && (
         <div className="absolute mt-2 w-36 bg-white shadow-lg rounded-md">
           <ul className="text-left text-gray-700">
-            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Option 1</li>
-            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Option 2</li>
-            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Option 3</li>
+            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">{opt1}</li>
+            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">{opt2}</li>
+            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">{opt3}</li>
           </ul>
         </div>
       )}

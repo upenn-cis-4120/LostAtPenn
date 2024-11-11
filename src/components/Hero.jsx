@@ -10,8 +10,8 @@ const Hero = () => {
       <div className="flex flex-col"> 
         <div className="flex gap-6 mb-6">
             <div className="ml-20 text-4xl text-cblue font-xbold flex justify-center items-center">Filters:</div>
-            <Filterbutton name="Type" color="bg-cred" textcolor="white" />
-            <Filterbutton name="Date" color="bg-cred" textcolor="white" />
+            <Filterbutton name="Type" color="bg-cred" textcolor="white" opt1="Electronics" opt2="Supplies" opt3="Perishable" />
+            <Filterbutton name="Date" color="bg-cred" textcolor="white" opt1="To" opt2="From" />
             <Filterbutton name="Location" color="bg-cred" textcolor="white" />
             <Filterbutton name="Lost" color="bg-lightblue" textcolor="cblue" />
             <Filterbutton name="Found" color="bg-lightblue" textcolor="cblue" />
