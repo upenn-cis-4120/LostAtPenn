@@ -101,50 +101,47 @@ export default function ChatApp() {
   }
 
   return (
-    <div className="h-screen flex">
+    <div className="h-[90vh] flex overflow-hidden">
       <UserList users={users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
       
       <div className="flex-1 flex flex-col h-full">
-        <div className="flex-1 overflow-auto p-4" style={{ maxHeight: 'calc(100vh - 150px)' }}>
+        <div className="flex-1 overflow-auto p-4" style={{ maxHeight: 'calc(90vh - 75px)' }}>
           {messages[selectedUser].map((msg) => (
             <MessageBubble key={msg.id} message={msg.content} sender={msg.sender} />
           ))}
           <div ref={messagesEndRef} />
         </div>
 
-        
-
-        <div className="p-4 border-t">
-  <div className="flex items-center gap-2">
-    <Form.Control
-      placeholder="Message"
-      value={message}
-      onChange={(e) => setMessage(e.target.value)}
-      onKeyPress={handleKeyPress}
-      style={{
-        flexGrow: 1, // Allows the input to take most of the available width
-        maxWidth: 'calc(100% - 50px)', // Leaves space for the button
-        border: '2px solid #011F5B',
-        paddingRight: '15px',
-        paddingLeft: '15px',
-        borderRadius: 'none'
-      }}
-    />
-    <Button 
-      onClick={handleSendMessage}
-      className="rounded-circle d-flex align-items-center justify-content-center p-3.5"
-      style={{ 
-        width: '40px', 
-        height: '40px',
-        backgroundColor: '#8C1A11',
-        border: 'none'
-      }}
-    >
-      <ArrowUp size={20} color="white" />
-    </Button>
-  </div>
-</div>
+        <div className="p-4 border-t-2" style={{ backgroundColor: 'white' }}>
+          <div className="flex items-center gap-2">
+            <Form.Control
+              placeholder="Message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+              style={{
+                flexGrow: 1,
+                maxWidth: 'calc(100% - 50px)',
+                border: '2px solid #011F5B',
+                paddingRight: '15px',
+                paddingLeft: '15px',
+              }}
+            />
+            <Button 
+              onClick={handleSendMessage}
+              className="rounded-circle d-flex align-items-center justify-content-center p-3.5"
+              style={{ 
+                width: '40px', 
+                height: '40px',
+                backgroundColor: '#8C1A11',
+                border: 'none'
+              }}
+            >
+              <ArrowUp size={20} color="white" />
+            </Button>
           </div>
         </div>
+      </div>
+    </div>
   )
 }
