@@ -38,7 +38,10 @@ const Navbar = () => {
         >
           <MessageCircle size={30} strokeWidth={2} />
         </button>
-        <button className="p-3 hover:scale-110 transition-transform duration-200">
+        <button 
+          className="p-3 hover:scale-110 transition-transform duration-200"
+          onClick={() => navigate('/login')}
+        >
           <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ backgroundColor: '#011F5B' }}>
             <User size={30} fill="white" stroke="none" />
           </div>
