@@ -11,8 +11,8 @@ const Navbar = () => {
       style={{ backgroundColor: '#F5F5F5', fontFamily: 'Poppins, sans-serif' }}
     >
       <button 
-        className="text-5xl font-black text-left focus:outline-none hover:scale-105 transition-transform duration-200" 
-        style={{ color: '#011F5B', fontFamily: 'Poppins, sans-serif' }}
+        className="text-5xl font-extrabold font-black text-left focus:outline-none hover:scale-105 transition-transform duration-200" 
+        style={{ color: '#011F5B', fontFamily: 'Poppins, sans-serif'}}
         onClick={() => window.location.href = '/'} // Change this as needed
       >
         LOST@PENN
