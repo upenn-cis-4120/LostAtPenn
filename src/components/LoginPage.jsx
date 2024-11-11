@@ -23,18 +23,26 @@ export default function SignInForm() {
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center min-vh-100">
-      <div className="card shadow-sm" style={{ maxWidth: '400px', width: '100%', borderRadius: '20px' }}>
-        <div className="card-body p-4">
+    <div 
+      className="container" 
+      style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '100vh'
+      }}
+    >
+      <div className="panel panel-default shadow" style={{ maxWidth: '400px', width: '100%', borderRadius: '20px' }}>
+        <div className="panel-body" style={{ padding: '20px' }}>
           <div className="text-center mb-4">
             <div 
-              className="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center"
-              style={{ width: '120px', height: '120px', backgroundColor: '#011F5B' }}
+              className="img-circle center-block mb-3"
+              style={{ width: '120px', height: '120px', backgroundColor: '#011F5B', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
               <img
                 src={logo}  // Use the imported logo image
                 alt="Logo"
-                className="img-fluid"
+                className="img-responsive"
                 style={{ width: '80px', height: '80px' }}
               />
             </div>
@@ -42,8 +50,8 @@ export default function SignInForm() {
           </div>
 
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label className="form-label" style={{ color: '#002D72' }}>Username/Email</label>
+            <div className="form-group">
+              <label style={{ color: '#002D72' }}>Username/Email</label>
               <input
                 type="email"
                 className="form-control"
@@ -58,8 +66,8 @@ export default function SignInForm() {
               />
             </div>
 
-            <div className="mb-3">
-              <label className="form-label" style={{ color: '#002D72' }}>Password</label>
+            <div className="form-group">
+              <label style={{ color: '#002D72' }}>Password</label>
               <input
                 type="password"
                 className="form-control"
@@ -74,7 +82,7 @@ export default function SignInForm() {
               />
             </div>
 
-            <div className="text-end mb-3">
+            <div className="text-right mb-3">
               <a 
                 href="#" 
                 className="text-decoration-none"
@@ -86,12 +94,13 @@ export default function SignInForm() {
 
             <button
               type="submit"
-              className="btn w-100 mb-3"
+              className="btn btn-block"
               style={{ 
                 backgroundColor: '#8B1818',
                 color: 'white',
                 borderRadius: '15px',
-                padding: '10px'
+                padding: '10px',
+                marginBottom: '15px'
               }}
             >
               Sign in
@@ -99,18 +108,22 @@ export default function SignInForm() {
 
             <button
               type="button"
-              className="btn btn-light w-100 mb-3 d-flex align-items-center justify-content-center gap-2"
+              className="btn btn-default btn-block"
               style={{ 
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 borderRadius: '15px',
                 padding: '10px',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                marginBottom: '15px'
               }}
             >
               <img
                 src={google}  // Use the imported Google image
                 alt="Google"
-                className="img-fluid"
-                style={{ width: '40px', height: '35px' }}
+                className="img-responsive"
+                style={{ width: '20px', height: '20px', marginRight: '10px' }}
               />
               Sign in with Google
             </button>

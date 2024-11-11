@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
 import { Upload, ArrowLeft } from 'lucide-react'
-import { useNavigate } from 'react-router-dom' // Import useNavigate
 import 'bootstrap/dist/css/bootstrap.min.css'
-import '@fontsource/poppins'
 import CategoryRadioButtons from './CategoryRadioButtons'
-import InlineRadioButtons from './InlineRadioButtons' 
+import InlineRadioButtons from './InlineRadioButtons'
+
 
 export default function LostFoundForm() {
-    const navigate = useNavigate() // Initialize navigate function
     const [image, setImage] = useState(null)
     const [formData, setFormData] = useState({
       name: '',
@@ -18,7 +16,7 @@ export default function LostFoundForm() {
       category: '',
       status: '' // New field for InlineRadioButtons
     })
-  
+ 
     const handleImageUpload = (e) => {
       const file = e.target.files?.[0]
       if (file) {
@@ -29,7 +27,7 @@ export default function LostFoundForm() {
         reader.readAsDataURL(file)
       }
     }
-  
+ 
     const handleInputChange = (e) => {
       const { name, value } = e.target
       setFormData(prev => ({
@@ -37,63 +35,69 @@ export default function LostFoundForm() {
         [name]: value
       }))
     }
-  
+ 
     const handleCategoryChange = (category) => {
       setFormData(prev => ({
         ...prev,
         category
       }))
     }
-  
+ 
     const handleStatusChange = (status) => {
       setFormData(prev => ({
         ...prev,
         status
       }))
     }
-    
+   
     return (
-      <div className="container my-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
-        <div className="d-flex justify-content-between align-items-center mb-4">
-            <button onClick={() => navigate('/')} className="text-dark text-decoration-none me-3" style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-                <ArrowLeft className="me-1" style={{ color: '#011F5B' }} />
-                <span style={{ color: '#011F5B', fontWeight: 'bold' }}>Back</span>
-            </button>
+      <div className="container" style={{ marginTop: '20px' }}>
+        <div className="row mb-4">
+          <div className="col-xs-12 col-sm-6">
+            <a href="#" className="text-dark text-decoration-none">
+              <ArrowLeft className="me-1" style={{ color: '#011F5B' }} />
+              <span style={{ color: '#011F5B' }}>Back</span>
+            </a>
+          </div>
+          <div className="col-xs-12 col-sm-6 text-center">
+            <h1 className="h3" style={{ color: '#011F5B' }}>Item Details:</h1>
+          </div>
         </div>
-
-        <div className="row g-4">
-          {/* Left Column */}
+ 
+        <div className="row">
           <div className="col-md-6">
-            <div className="card h-100 p-3 shadow-sm">
-              <div className="card-body d-flex flex-column align-items-center justify-content-center">
-                <label className="d-block text-center cursor-pointer w-100">
+            <div className="panel panel-default">
+              <div className="panel-body text-center">
+                <label className="d-block" style={{ cursor: 'pointer' }}>
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleImageUpload}
-                    className="d-none"
+                    style={{ display: 'none' }}
                   />
-                  <div className="border border-2 border-dashed rounded p-4 hover:border-primary w-100 text-center d-flex justify-content-center align-items-center" style={{ height: '285px' }}>
+                  <div className="border border-2" style={{ borderStyle: 'dashed', borderRadius: '10px', padding: '20px' }}>
                     {image ? (
                       <img
                         src={image}
                         alt="Uploaded preview"
-                        className="img-fluid rounded"
-                        style={{ maxHeight: '100%', width: 'auto' }}
+                        className="img-responsive"
+                        style={{ maxHeight: '300px', width: 'auto', borderRadius: '10px' }}
                       />
                     ) : (
-                      <div className="text-center d-flex flex-column justify-content-center align-items-center">
-                        <div className="d-flex justify-content-center align-items-center" style={{ marginLeft: '110px' }}>
-                          <Upload size={100} className="text-primary mb-2" />
+                        <div className="text-center">
+                            <Upload size={100} style={{ color: '#007bff', marginBottom: '10px' }} />
+                            <div className="h5" style={{ color: '#007bff' }}>Upload Image</div>
                         </div>
-                        <div className="h5 text-primary">Upload Image</div>
-                      </div>
                     )}
                   </div>
                 </label>
               </div>
-              <div className="card-body">
-                <label htmlFor="comments" className="form-label h5" style={{ color: '#011F5B', fontWeight: 'bold' }}>Add Additional Comments:</label>
+            </div>
+
+            {/* Additional Comments Section */}
+            <div className="panel panel-default" style={{ marginTop: '20px' }}>
+              <div className="panel-body">
+                <label htmlFor="comments" className="control-label h5" style={{ color: '#011F5B' }}>Add Additional Comments:</label>
                 <textarea
                   className="form-control"
                   id="comments"
@@ -103,24 +107,22 @@ export default function LostFoundForm() {
                   onChange={handleInputChange}
                 ></textarea>
               </div>
+            </div>
 
-              {/* Status Options (I Lost This / I Found This) */}
-              <div className="text-center mt-4">
-                <InlineRadioButtons
-                  selectedStatus={formData.status}
-                  onStatusChange={handleStatusChange}
-                />
-              </div>
+            {/* Status (I Lost This / I Found This) */}
+            <div className="text-center" style={{ marginTop: '20px' }}>
+              <InlineRadioButtons
+                selectedStatus={formData.status}
+                onStatusChange={handleStatusChange}
+              />
             </div>
           </div>
-
-          {/* Right Column */}
+ 
           <div className="col-md-6">
-            <div className="card h-100 p-3 shadow-sm">
-              <div className="card-body">
-                <h5 className="card-title" style={{ color: '#011F5B', fontWeight: 'bold' }}>Item Details:</h5>
-                <div className="mb-3">
-                  <label htmlFor="name" className="form-label" style={{ color: '#011F5B', fontWeight: 'bold' }}>Name:</label>
+            <div className="panel panel-default">
+              <div className="panel-body">
+                <div className="form-group">
+                  <label htmlFor="name" className="control-label h5" style={{ color: '#011F5B' }}>Name:</label>
                   <input
                     type="text"
                     className="form-control"
@@ -130,33 +132,35 @@ export default function LostFoundForm() {
                     onChange={handleInputChange}
                   />
                 </div>
-
-                <h5 className="card-title" style={{ color: '#011F5B', fontWeight: 'bold' }}>Last Seen:</h5>
-                <div className="row mb-2 mx-auto" style={{ backgroundColor: '#f0f0f0', borderRadius: '8px', padding: '5px 10px', maxWidth: '99%' }}>
-                  <div className="col-4">
-                    <label htmlFor="time" className="form-label" style={{ color: '#011F5B' }}>Time:</label>
-                    <input
-                      type="time"
-                      className="form-control"
-                      id="time"
-                      name="time"
-                      value={formData.time}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="col-4">
-                    <label htmlFor="date" className="form-label" style={{ color: '#011F5B' }}>Date:</label>
-                    <input
-                      type="date"
-                      className="form-control"
-                      id="date"
-                      name="date"
-                      value={formData.date}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="col-4">
-                    <label htmlFor="place" className="form-label" style={{ color: '#011F5B' }}>Place:</label>
+ 
+                <div className="form-group">
+  <h5 className="card-title h5" style={{ color: '#011F5B' }}>Last Seen:</h5>
+  <div className="form-group">
+    <label htmlFor="time" className="control-label" style={{ color: '#011F5B' }}>Time:</label>
+    <input
+      type="time"
+      className="form-control"
+      id="time"
+      name="time"
+      value={formData.time}
+      onChange={handleInputChange}
+      style={{ paddingTop: '0.6rem', paddingBottom: '0.6rem', lineHeight: '1.5' }}
+    />
+  </div>
+  <div className="form-group">
+    <label htmlFor="date" className="control-label" style={{ color: '#011F5B' }}>Date:</label>
+    <input
+      type="date"
+      className="form-control"
+      id="date"
+      name="date"
+      value={formData.date}
+      onChange={handleInputChange}
+      style={{ paddingTop: '0.6rem', paddingBottom: '0.6rem', lineHeight: '1.5' }}
+    />
+  </div>
+                  <div className="form-group">
+                    <label htmlFor="place" className="control-label" style={{ color: '#011F5B' }}>Place:</label>
                     <input
                       type="text"
                       className="form-control"
@@ -167,10 +171,10 @@ export default function LostFoundForm() {
                     />
                   </div>
                 </div>
-
-                <h5 className="card-title" style={{ color: '#011F5B', fontWeight: 'bold' }}>Categories:</h5>
-                <div style={{ backgroundColor: '#f0f0f0', borderRadius: '8px', padding: '10px' }}>
-                  <CategoryRadioButtons 
+ 
+                <div>
+                  <h5 className="card-title h5" style={{ color: '#011F5B' }}>Categories:</h5>
+                  <CategoryRadioButtons
                     selectedCategory={formData.category}
                     onCategoryChange={handleCategoryChange}
                   />
@@ -179,16 +183,16 @@ export default function LostFoundForm() {
             </div>
           </div>
         </div>
-
-        <div className="text-center mt-4">
-          <button 
-              type="submit" 
-              className="btn btn-lg px-5" 
-              style={{ backgroundColor: '#8C1A11', borderColor: '#8C1A11', color: 'white', fontFamily: 'Poppins, sans-serif', fontWeight: 'bold' }}
-          >
-            Submit Report
-          </button>
+ 
+        <div className="text-center" style={{ marginTop: '20px' }}>
+            <button
+                type="submit"
+                className="btn btn-lg"
+                style={{ backgroundColor: '#8C1A11', borderColor: '#8C1A11', color: 'white', padding: '10px 30px' }}
+            >
+              Submit Report
+            </button>
         </div>
       </div>
     )
-}
+  }
