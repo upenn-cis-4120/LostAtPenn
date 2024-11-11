@@ -11,7 +11,7 @@ export default {
       },
       colors: {
         'cblue': '#011f5b',
-        'cred': '#ef4444',
+        'cred': '#8c1a11',
       },
     },
   },

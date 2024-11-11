@@ -7,21 +7,21 @@ const Hero = () => {
     <div className="bg-white w-screen h-screen overflow-y-auto p-4 flex flex-wrap gap-16 justify-center">
       <Cards 
         status="Found" 
-        item="Macbook Pro 13'" 
+        item="Macbook Pro 2020" 
+        when="April 13 2020" 
+        where="Levine Hall" 
+        photo={macbook}
+      />
+      <Cards 
+        status="Lost" 
+        item="Fountain Pen" 
         when="April 13 2020" 
         where="David Rittenhouse" 
         photo={macbook}
       />
       <Cards 
         status="Found" 
-        item="Macbook Pro 13'" 
-        when="April 13 2020" 
-        where="David Rittenhouse" 
-        photo={macbook}
-      />
-      <Cards 
-        status="Found" 
-        item="Macbook Pro 13'" 
+        item="Pencil case" 
         when="April 13 2020" 
         where="David Rittenhouse" 
         photo={macbook}
@@ -48,10 +48,17 @@ const Hero = () => {
       />
       <Cards
         status="Lost"
-        item=""
+        item="Mouse Pad"
         when="April 13 2020"
         where="David Rittenhouse"
       />
+
+        <Cards
+        status="Lost"
+        item=""
+        when="April 13 2020"
+        where="David Rittenhouse"
+        />
     </div>
   );
 };
