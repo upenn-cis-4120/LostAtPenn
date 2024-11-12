@@ -19,7 +19,7 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<Hero showMiffyCard={showMiffyCard} />} />
-          <Route path="/chat" element={<Chat />} />
+          <Route path="/chat" element={<Chat selectedUserId={1} />} /> {/* Pass Jiming Choi's ID */}
           <Route path="/upload" element={<UploadPage onSubmit={handleFormSubmit} />} />
           <Route path="/login" element={<LoginPage />} />
         </Routes>

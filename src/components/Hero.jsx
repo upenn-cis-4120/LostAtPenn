@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Cards from './Cards';
 import macbook from '../assets/mbpro.jpg';
 import pcase from '../assets/pcase.jpg';
@@ -6,6 +7,12 @@ import Filterbutton from './Filterbutton';
 import miffy from '../assets/miffy.jpg';
 
 const Hero = ({ showMiffyCard }) => {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate('/chat');
+  };
+
   return (
     <div className="bg-white w-screen h-screen overflow-y-auto p-4">
       <div className="flex flex-col"> 
@@ -25,14 +32,16 @@ const Hero = ({ showMiffyCard }) => {
               when="November 11 2024"
               where="Harnwell"
               photo={miffy}
+              onClick={handleCardClick}
             />
           )}
           <Cards 
               status="Found" 
-              item="Macbook Pro 2020" 
-              when="April 13 2020" 
-              where="Levine Hall" 
+              item="Credit card" 
+              when="May 13 2021" 
+              where="Harrison" 
               photo={macbook}
+              onClick={handleCardClick}
           />
           <Cards 
               status="Lost" 
@@ -40,6 +49,7 @@ const Hero = ({ showMiffyCard }) => {
               when="April 13 2020" 
               where="David Rittenhouse" 
               photo={macbook}
+              onClick={handleCardClick}
           />
           <Cards 
               status="Found" 
@@ -47,6 +57,7 @@ const Hero = ({ showMiffyCard }) => {
               when="April 13 2020" 
               where="David Rittenhouse" 
               photo={pcase}
+              onClick={handleCardClick}
           />
         <Cards 
             status="Found" 
