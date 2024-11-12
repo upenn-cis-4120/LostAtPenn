@@ -3,6 +3,7 @@ import Cards from './Cards';
 import macbook from '../assets/mbpro.jpg';
 import pcase from '../assets/pcase.jpg';
 import Filterbutton from './Filterbutton';
+import miffy from '../assets/miffy.jpg';
 
 const Hero = ({ showMiffyCard }) => {
   return (
@@ -23,6 +24,7 @@ const Hero = ({ showMiffyCard }) => {
               item="Miffy Plushie"
               when="November 11 2024"
               where="Harnwell"
+              photo={miffy}
             />
           )}
           <Cards 
