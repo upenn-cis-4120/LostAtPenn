@@ -5,6 +5,9 @@ import macbook from '../assets/mbpro.jpg';
 import pcase from '../assets/pcase.jpg';
 import Filterbutton from './Filterbutton';
 import miffy from '../assets/miffy.jpg';
+import nails from '../assets/nails.png';
+import nomoney from '../assets/nomoney.jpg';
+import iphone from '../assets/iphone.jpeg';
 
 const Hero = ({ showMiffyCard }) => {
   const navigate = useNavigate();
@@ -30,7 +33,7 @@ const Hero = ({ showMiffyCard }) => {
               status="Lost"
               item="Miffy Plushie"
               when="November 11 2024"
-              where="Harnwell"
+              where="Harnwell College House"
               photo={miffy}
               onClick={handleCardClick}
             />
@@ -39,13 +42,20 @@ const Hero = ({ showMiffyCard }) => {
               status="Found" 
               item="Credit card" 
               when="May 13 2021" 
-              where="Harrison" 
-              photo={macbook}
+              where="Harrison College House" 
+              photo={nomoney}
               onClick={handleCardClick}
           />
           <Cards 
+            status="Found" 
+            item="Alice's $80 Nails" 
+            when="October 29 2023" 
+            where="Huntshall Hall"
+            photo={nails}
+        />
+          <Cards 
               status="Lost" 
-              item="Fountain Pen" 
+              item="Macbook Pro 2020" 
               when="April 13 2020" 
               where="David Rittenhouse" 
               photo={macbook}
@@ -54,24 +64,19 @@ const Hero = ({ showMiffyCard }) => {
           <Cards 
               status="Found" 
               item="Pencil case" 
-              when="April 13 2020" 
-              where="David Rittenhouse" 
+              when="March 13 2024" 
+              where="Addams Building" 
               photo={pcase}
               onClick={handleCardClick}
           />
         <Cards 
             status="Found" 
-            item="Macbook Pro 13'" 
-            when="April 13 2020" 
-            where="David Rittenhouse" 
-            photo={macbook}
+            item="iPhone 11" 
+            when="May 19 2024" 
+            where="Rodin College House" 
+            photo={iphone}
         />
-        <Cards 
-            status="Found" 
-            item="Macbook Pro 13'" 
-            when="April 13 2020" 
-            where="David Rittenhouse"
-        />
+        
         <Cards 
             status="Found" 
             item="Macbook Pro 13'" 
