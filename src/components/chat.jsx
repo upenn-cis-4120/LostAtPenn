@@ -1,20 +1,20 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { Button, Form } from 'react-bootstrap'
-import { ArrowUp, User } from 'lucide-react'
+import React, { useState, useRef, useEffect } from 'react';
+import { Button, Form } from 'react-bootstrap';
+import { ArrowUp, User } from 'lucide-react';
 
 // Sample user data
 const users = [
   { id: 1, name: 'Jiming Choi', avatarColor: '#8C1A11' },
   { id: 2, name: 'Ximin Liu', avatarColor: '#011F5B' },
   { id: 3, name: 'Jilice Luo', avatarColor: '#B0B0B0' },
-]
+];
 
 // Initial messages for each user
 const initialMessages = {
-  1: [{ id: 1, content: 'hey bestie i lost my airpods and i think you found them. hmu!!!!!!!!! slayyy:)))))))', sender: 'them' }],
+  1: [{ id: 1, content: 'Hey bestie, I lost my AirPods and I think you found them. HMU! Slayyy! :)))))))', sender: 'them' }],
   2: [],
   3: [],
-}
+};
 
 // Avatar component for user icons
 const Avatar = ({ color }) => (
@@ -24,7 +24,7 @@ const Avatar = ({ color }) => (
   >
     <User size={30} fill="white" />
   </div>
-)
+);
 
 // UserList component for stacked avatars with dividers
 const UserList = ({ users, selectedUser, setSelectedUser }) => (
@@ -43,12 +43,12 @@ const UserList = ({ users, selectedUser, setSelectedUser }) => (
       </React.Fragment>
     ))}
   </div>
-)
+);
 
 // MessageBubble component for chat messages with flexible width and alignment
 const MessageBubble = ({ message, sender }) => (
   <div
-    className={`mb-3 d-flex ${'justify-content-end'}`}
+    className={`mb-3 d-flex ${sender === 'me' ? 'justify-content-end' : 'justify-content-start'}`}
     style={{ width: '100%' }}
   >
     <div
@@ -66,44 +66,46 @@ const MessageBubble = ({ message, sender }) => (
       <p className="mb-0">{message}</p>
     </div>
   </div>
-)
+);
 
-export default function ChatApp() {
-  const [selectedUser, setSelectedUser] = useState(1)
-  const [message, setMessage] = useState('')
-  const [messages, setMessages] = useState(initialMessages)
-  const messagesEndRef = useRef(null)
+export default function ChatApp({ selectedUserId }) {
+  const [selectedUser, setSelectedUser] = useState(selectedUserId || 1);
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState(initialMessages);
+  const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+    scrollToBottom();
+  }, [messages, selectedUser]);
 
   const handleSendMessage = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (message.trim()) {
-      const newMessage = { id: Date.now(), content: message.trim(), sender: 'me' }
+      const newMessage = { id: Date.now(), content: message.trim(), sender: 'me' };
       setMessages(prevMessages => ({
         ...prevMessages,
-        [selectedUser]: [...prevMessages[selectedUser], newMessage]
-      }))
-      setMessage('')
+        [selectedUser]: [...prevMessages[selectedUser], newMessage],
+      }));
+      setMessage('');
     }
-  }
+  };
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      handleSendMessage(e)
+      handleSendMessage(e);
     }
-  }
+  };
 
   return (
     <div className="h-[90vh] flex overflow-hidden">
+      {/* User list on the left */}
       <UserList users={users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
       
+      {/* Chat messages area */}
       <div className="flex-1 flex flex-col h-full">
         <div className="flex-1 overflow-auto p-4" style={{ maxHeight: 'calc(90vh - 75px)' }}>
           {messages[selectedUser].map((msg) => (
@@ -112,6 +114,7 @@ export default function ChatApp() {
           <div ref={messagesEndRef} />
         </div>
 
+        {/* Message input area */}
         <div className="p-4 border-t-2" style={{ backgroundColor: 'white' }}>
           <div className="flex items-center gap-2">
             <Form.Control
@@ -143,5 +146,5 @@ export default function ChatApp() {
         </div>
       </div>
     </div>
-  )
+  );
 }
