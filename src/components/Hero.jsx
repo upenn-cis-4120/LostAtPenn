@@ -8,6 +8,7 @@ import miffy from '../assets/miffy.jpg';
 import nails from '../assets/nails.png';
 import nomoney from '../assets/nomoney.jpg';
 import iphone from '../assets/iphone.jpeg';
+import ReportButton from './ReportButton';
 
 const Hero = ({ showMiffyCard }) => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const Hero = ({ showMiffyCard }) => {
 
   return (
     <div className="bg-white w-screen h-screen overflow-y-auto p-4">
-      <div className="flex flex-col"> 
+      <div className="flex flex-col">
         <div className="flex gap-6 mb-6">
           <div className="ml-20 text-4xl text-cblue font-xbold flex justify-center items-center">Filters:</div>
           <Filterbutton name="Type" color="bg-cred" textcolor="white" opt1="Electronics" opt2="Supplies" opt3="Perishable" />
@@ -39,12 +40,12 @@ const Hero = ({ showMiffyCard }) => {
             />
           )}
           <Cards 
-              status="Found" 
-              item="Credit card" 
-              when="May 13 2021" 
-              where="Harrison College House" 
-              photo={nomoney}
-              onClick={handleCardClick}
+            status="Found" 
+            item="Credit card" 
+            when="May 13 2021" 
+            where="Harrison College House" 
+            photo={nomoney}
+            onClick={handleCardClick}
           />
           <Cards 
             status="Found" 
@@ -52,53 +53,55 @@ const Hero = ({ showMiffyCard }) => {
             when="October 29 2023" 
             where="Huntshall Hall"
             photo={nails}
-        />
-          <Cards 
-              status="Lost" 
-              item="Macbook Pro 2020" 
-              when="April 13 2020" 
-              where="David Rittenhouse" 
-              photo={macbook}
-              onClick={handleCardClick}
           />
           <Cards 
-              status="Found" 
-              item="Pencil case" 
-              when="March 13 2024" 
-              where="Addams Building" 
-              photo={pcase}
-              onClick={handleCardClick}
+            status="Lost" 
+            item="Macbook Pro 2020" 
+            when="April 13 2020" 
+            where="David Rittenhouse" 
+            photo={macbook}
+            onClick={handleCardClick}
           />
-        <Cards 
+          <Cards 
+            status="Found" 
+            item="Pencil case" 
+            when="March 13 2024" 
+            where="Addams Building" 
+            photo={pcase}
+            onClick={handleCardClick}
+          />
+          <Cards 
             status="Found" 
             item="iPhone 11" 
             when="May 19 2024" 
             where="Rodin College House" 
             photo={iphone}
-        />
-        
-        <Cards 
+          />
+          <Cards 
             status="Found" 
             item="Macbook Pro 13'" 
             when="April 13 2020" 
             where="David Rittenhouse" 
             photo={macbook}
-        />
-        <Cards
+          />
+          <Cards
             status="Lost"
             item="Mouse Pad"
             when="April 13 2020"
             where="David Rittenhouse"
-        />
-
-            <Cards
+          />
+          <Cards
             status="Lost"
             item=""
             when="April 13 2020"
             where="David Rittenhouse"
-            />
+          />
         </div>
+        {/* Add the ReportButton here */}
+        <div className="flex justify-center mt-8">
+          <ReportButton />
         </div>
+      </div>
     </div>
   );
 };
