@@ -9,7 +9,7 @@ const ReportButton = () => {
       style={{
         position: 'fixed',
         bottom: '20px',
-        left: '50%',
+        left: '90%',
         transform: 'translateX(-50%)',
         zIndex: 1000,
       }}
