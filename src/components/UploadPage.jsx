@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import { Upload, ArrowLeft } from 'lucide-react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CategoryRadioButtons from './CategoryRadioButtons';
 import InlineRadioButtons from './InlineRadioButtons';
+import { storage, database } from './firebase';
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref as databaseRef, push, set } from 'firebase/database';
 
 export default function LostFoundForm({ onSubmit }) {
   const [image, setImage] = useState(null);
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -52,10 +55,46 @@ export default function LostFoundForm({ onSubmit }) {
     }));
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(); // Trigger the callback to show the Miffy Plushie card
-    navigate('/'); // Redirect to the homepage after submission
+
+    // Upload image to Firebase Storage
+    let photoURL = '';
+    if (image) {
+      // Convert data URL to blob
+      const response = await fetch(image);
+      const blob = await response.blob();
+
+      // Create a unique filename
+      const filename = `images/${Date.now()}-${formData.name}`;
+      const storageReference = storageRef(storage, filename);
+
+      // Upload the image blob to Firebase Storage
+      await uploadBytes(storageReference, blob);
+
+      // Get the download URL of the uploaded image
+      photoURL = await getDownloadURL(storageReference);
+    }
+
+    // Prepare data to save to Firebase Realtime Database
+    const dataToSave = {
+      item: formData.name,
+      photo: photoURL,
+      status: formData.status === 'lost' ? 'Lost' : 'Found',
+      when: formData.date,
+      where: formData.place,
+      comments: formData.comments,
+      category: formData.category,
+    };
+
+    // Save the data to Firebase Realtime Database
+    const itemsRef = databaseRef(database, 'cards');
+    const newItemRef = push(itemsRef);
+    await set(newItemRef, dataToSave);
+
+    // Trigger the callback and navigate to the homepage
+    onSubmit();
+    navigate('/');
   };
 
   return (

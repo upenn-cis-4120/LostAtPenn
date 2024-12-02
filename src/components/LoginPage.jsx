@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import 'bootstrap/dist/css/bootstrap.min.css';
-import google from '../assets/google.png';  // Correct path to your image
-import logo from '../assets/logo.png';  // Correct path to your image
+import google from '../assets/google.png'; // Correct path to your image
+import logo from '../assets/logo.png'; // Correct path to your image
 
 export default function SignInForm() {
   const [formData, setFormData] = useState({
@@ -9,9 +10,11 @@ export default function SignInForm() {
     password: ''
   });
 
+  const navigate = useNavigate(); // Initialize useNavigate
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value
     }));
@@ -19,7 +22,13 @@ export default function SignInForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission
+    // Simulate form submission or authentication
+    const isAuthenticated = true; // Replace with actual authentication logic
+    if (isAuthenticated) {
+      navigate('/'); // Navigate to the home page
+    } else {
+      alert('Invalid login credentials'); // Display error for invalid credentials
+    }
   };
 
   return (
@@ -40,7 +49,7 @@ export default function SignInForm() {
               style={{ width: '120px', height: '120px', backgroundColor: '#011F5B', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
               <img
-                src={logo}  // Use the imported logo image
+                src={logo} // Use the imported logo image
                 alt="Logo"
                 className="img-responsive"
                 style={{ width: '80px', height: '80px' }}
@@ -120,7 +129,7 @@ export default function SignInForm() {
               }}
             >
               <img
-                src={google}  // Use the imported Google image
+                src={google} // Use the imported Google image
                 alt="Google"
                 className="img-responsive"
                 style={{ width: '20px', height: '20px', marginRight: '10px' }}

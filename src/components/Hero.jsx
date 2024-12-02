@@ -1,21 +1,24 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import Cards from './Cards';
-import macbook from '../assets/mbpro.jpg';
-import pcase from '../assets/pcase.jpg';
 import Filterbutton from './Filterbutton';
-import miffy from '../assets/miffy.jpg';
-import nails from '../assets/nails.png';
-import nomoney from '../assets/nomoney.jpg';
-import iphone from '../assets/iphone.jpeg';
 import ReportButton from './ReportButton';
+import { database } from './firebase';
+import { ref, onValue } from 'firebase/database'
 
-const Hero = ({ showMiffyCard }) => {
-  const navigate = useNavigate();
+const Hero = () => {
+  const [cardsData, setCardsData] = useState([]);
 
-  const handleCardClick = () => {
-    navigate('/chat');
-  };
+  useEffect(() => {
+    const cardsRef = ref(database, 'cards');
+
+    onValue(cardsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const cardsArray = Object.values(data);
+        setCardsData(cardsArray);
+      }
+    });
+  }, []);
 
   return (
     <div className="bg-white w-screen h-screen overflow-y-auto p-4">
@@ -29,73 +32,19 @@ const Hero = ({ showMiffyCard }) => {
           <Filterbutton name="Found" color="bg-lightblue" textcolor="cblue" />
         </div>
         <div className="flex flex-wrap gap-16 justify-center">
-          {showMiffyCard && (
+          {/* Render cards from Firebase */}
+          {cardsData.map((card, index) => (
             <Cards
-              status="Lost"
-              item="Miffy Plushie"
-              when="November 11 2024"
-              where="Harnwell College House"
-              photo={miffy}
-              onClick={handleCardClick}
+              key={index}
+              status={card.status}
+              item={card.item}
+              when={card.when}
+              where={card.where}
+              photo={card.photo}
+              comments={card.comments}
+              category={card.category}
             />
-          )}
-          <Cards 
-            status="Found" 
-            item="Credit card" 
-            when="May 13 2021" 
-            where="Harrison College House" 
-            photo={nomoney}
-            onClick={handleCardClick}
-          />
-          <Cards 
-            status="Found" 
-            item="Alice's $80 Nails" 
-            when="October 29 2023" 
-            where="Huntshall Hall"
-            photo={nails}
-          />
-          <Cards 
-            status="Lost" 
-            item="Macbook Pro 2020" 
-            when="April 13 2020" 
-            where="David Rittenhouse" 
-            photo={macbook}
-            onClick={handleCardClick}
-          />
-          <Cards 
-            status="Found" 
-            item="Pencil case" 
-            when="March 13 2024" 
-            where="Addams Building" 
-            photo={pcase}
-            onClick={handleCardClick}
-          />
-          <Cards 
-            status="Found" 
-            item="iPhone 11" 
-            when="May 19 2024" 
-            where="Rodin College House" 
-            photo={iphone}
-          />
-          <Cards 
-            status="Found" 
-            item="Macbook Pro 13'" 
-            when="April 13 2020" 
-            where="David Rittenhouse" 
-            photo={macbook}
-          />
-          <Cards
-            status="Lost"
-            item="Mouse Pad"
-            when="April 13 2020"
-            where="David Rittenhouse"
-          />
-          <Cards
-            status="Lost"
-            item=""
-            when="April 13 2020"
-            where="David Rittenhouse"
-          />
+          ))}
         </div>
         {/* Add the ReportButton here */}
         <div className="flex justify-center mt-8">

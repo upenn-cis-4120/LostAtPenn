@@ -1,11 +1,12 @@
+// Cards.jsx
 import React from 'react';
 
-const Cards = ({ status, item, when, where, photo, onClick }) => {
+const Cards = ({ status, item, when, where, photo, comments, category, onClick }) => {
   return (
     <div
       className={`bg-gray-100 w-[300px] ${photo ? 'h-[calc(60vh-1rem)]' : 'h-[calc(30vh-1rem)]'} rounded-3xl flex flex-col overflow-hidden shadow-lg`}
       style={{ boxShadow: '4px 0 15px rgba(0, 0, 0, 0.1), -4px 0 15px rgba(0, 0, 0, 0.1), 0 4px 15px rgba(0, 0, 0, 0.1)' }}
-      onClick={onClick} // Attach the onClick prop here
+      onClick={onClick}
     >
       <div className={`h-28 w-full ${status === 'Lost' ? 'bg-cred' : 'bg-cblue'} rounded-t-3xl flex items-center`}>
         <h1 className="text-left px-10 text-white font-bold text-4xl">
@@ -17,6 +18,8 @@ const Cards = ({ status, item, when, where, photo, onClick }) => {
         <p><strong>Item:</strong> {item}</p>
         <p><strong>When:</strong> {when}</p>
         <p><strong>Where:</strong> {where}</p>
+        {category && <p><strong>Category:</strong> {category}</p>}
+        {comments && <p><strong>Comments:</strong> {comments}</p>}
       </div>
 
       {photo && (
