@@ -125,10 +125,14 @@ export default function LostFoundForm({ onSubmit }) {
     <div className="container" style={{ marginTop: '20px' }}>
       <div className="row mb-4">
         <div className="col-xs-12 col-sm-6">
-          <a href="#" className="text-dark text-decoration-none">
-            <ArrowLeft className="me-1" style={{ color: '#011F5B' }} />
-            <span style={{ color: '#011F5B' }}>Back</span>
-          </a>
+        <a
+          href="#"
+          onClick={() => navigate('/')}
+          className="text-dark text-decoration-none"
+        >
+  <ArrowLeft className="me-1" style={{ color: '#011F5B' }} />
+  <span style={{ color: '#011F5B' }}>Back</span>
+</a>
         </div>
         <div className="col-xs-12 col-sm-6 text-center">
           <h1 className="h3" style={{ color: '#011F5B' }}>Item Details:</h1>
