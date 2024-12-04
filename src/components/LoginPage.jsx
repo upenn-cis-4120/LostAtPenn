@@ -7,8 +7,12 @@ import {
   GoogleAuthProvider,
   signInWithPopup
 } from '../components/firebase.js';
+import { ref, onValue, remove } from 'firebase/database'; // Added `remove`
+import { database } from '../components/firebase.js';
 import google from '../assets/google.png';
 import logo from '../assets/logo.png';
+import { User } from 'lucide-react';
+import Cards from './Cards';
 
 export default function SignInForm() {
   const [formData, setFormData] = useState({
@@ -18,6 +22,7 @@ export default function SignInForm() {
 
   const [error, setError] = useState('');
   const [user, setUser] = useState(null); // To store the logged-in user's data
+  const [userCards, setUserCards] = useState([]); // To store the logged-in user's cards
   const navigate = useNavigate();
   const googleProvider = new GoogleAuthProvider();
 
@@ -25,9 +30,41 @@ export default function SignInForm() {
     // Firebase listener to check authentication state
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       setUser(currentUser);
+      if (currentUser?.email) {
+        fetchUserCards(currentUser.email);
+      }
     });
     return () => unsubscribe(); // Clean up the listener
   }, []);
+
+  // Fetch user-specific cards from Firebase
+  const fetchUserCards = (email) => {
+    const cardsRef = ref(database, 'cards');
+
+    onValue(cardsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        // Filter cards by email matching the logged-in user
+        const userSpecificCards = Object.entries(data)
+          .map(([key, value]) => ({ id: key, ...value }))
+          .filter((card) => card.email === email);
+
+        setUserCards(userSpecificCards);
+      }
+    });
+  };
+
+  // Delete card from Firebase
+  const handleDeleteCard = async (cardId) => {
+    try {
+      const cardRef = ref(database, `cards/${cardId}`);
+      await remove(cardRef); // Remove the card
+      setUserCards((prevCards) => prevCards.filter((card) => card.id !== cardId)); // Update UI
+    } catch (error) {
+      console.error("Error deleting card:", error.message);
+      alert("Failed to delete the report. Please try again.");
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -71,26 +108,97 @@ export default function SignInForm() {
         className="container"
         style={{
           display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+          flexDirection: 'column',
+          alignItems: 'center', // Center align horizontally
+          justifyContent: 'center', // Center align vertically
           minHeight: '100vh',
-          textAlign: 'center'
+          textAlign: 'center', // Center text alignment
+          padding: '20px',
         }}
       >
-        <div>
-          <h1>Hi, {user.displayName || "User"}!</h1>
-          <p>Email: {user.email}</p>
-          <button
-            onClick={handleSignOut}
-            className="btn btn-danger"
+        {/* Centered User Icon */}
+        <div
+          className="w-32 h-32 rounded-full flex items-center justify-center"
+          style={{
+            backgroundColor: '#011F5B',
+            marginBottom: '20px',
+          }}
+        >
+          <User size={80} fill="white" stroke="none" />
+        </div>
+
+        <h1 style={{ fontSize: '3rem' }}>
+          Hi, {user.displayName || "User"}!
+        </h1>
+        <p style={{ fontSize: '1.75rem', color: '#666' }}>
+          Email: {user.email}
+        </p>
+        <button
+          onClick={handleSignOut}
+          className="btn"
+          style={{
+            marginTop: '10px',
+            borderRadius: '15px',
+            padding: '10px 20px',
+            backgroundColor: '#8C1A11',
+            color: 'white',
+            border: 'none',
+          }}
+        >
+          Sign Out
+        </button>
+
+        {/* My Reports Section */}
+        <div className="mt-5" style={{ width: '100%' }}>
+          <h2
+            className="mb-4"
             style={{
               marginTop: '20px',
-              borderRadius: '15px',
-              padding: '10px 20px'
+              fontSize: '2.5rem',
+              textAlign: 'center',
             }}
           >
-            Sign Out
-          </button>
+            My Reports
+          </h2>
+          <div
+            className="d-flex flex-wrap"
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '20px',
+              justifyContent: 'center', // Center the reports section
+            }}
+          >
+            {userCards.length > 0 ? (
+              userCards.map((card) => (
+                <div key={card.id} style={{ textAlign: 'center' }}>
+                  <Cards
+                    status={card.status}
+                    item={card.item}
+                    when={card.when}
+                    where={card.where}
+                    photo={card.photo}
+                    comments={card.comments}
+                    category={card.category}
+                    email={card.email}
+                  />
+                  <button
+                    onClick={() => handleDeleteCard(card.id)}
+                    className="btn btn-danger mt-2"
+                    style={{
+                      borderRadius: '15px',
+                      backgroundColor: '#8C1A11',
+                      padding: '5px 15px',
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p style={{ color: '#666' }}>No reports found.</p>
+            )}
+          </div>
         </div>
       </div>
     );

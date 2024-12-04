@@ -3,9 +3,7 @@ import Cards from './Cards';
 import Filterbutton from './Filterbutton';
 import ReportButton from './ReportButton';
 import { database } from './firebase';
-import { ref, onValue } from 'firebase/database'
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from './firebase';
+import { ref, onValue } from 'firebase/database';
 
 const Hero = () => {
   const [cardsData, setCardsData] = useState([]);
@@ -16,7 +14,11 @@ const Hero = () => {
     onValue(cardsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const cardsArray = Object.values(data);
+        // Convert object data to an array and preserve the unique keys
+        const cardsArray = Object.entries(data).map(([key, value]) => ({
+          id: key, // Add a unique ID for each card
+          ...value,
+        })).reverse();
         setCardsData(cardsArray);
       }
     });
@@ -35,9 +37,9 @@ const Hero = () => {
         </div>
         <div className="flex flex-wrap gap-16 justify-center">
           {/* Render cards from Firebase */}
-          {cardsData.map((card, index) => (
+          {cardsData.map((card) => (
             <Cards
-              key={index}
+              key={card.id}
               status={card.status}
               item={card.item}
               when={card.when}
@@ -45,6 +47,7 @@ const Hero = () => {
               photo={card.photo}
               comments={card.comments}
               category={card.category}
+              email={card.email} // Pass email to Cards component
             />
           ))}
         </div>

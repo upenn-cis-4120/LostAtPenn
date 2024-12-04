@@ -6,6 +6,7 @@ import CategoryRadioButtons from './CategoryRadioButtons';
 import InlineRadioButtons from './InlineRadioButtons';
 import { database } from './firebase';
 import { ref as databaseRef, push } from 'firebase/database';
+import { getAuth } from "firebase/auth"; // Import Firebase Authentication
 
 export default function LostFoundForm({ onSubmit }) {
   // State for the image file and its preview URL
@@ -23,6 +24,11 @@ export default function LostFoundForm({ onSubmit }) {
     status: '',
   });
 
+  // Get the signed-in user's email
+  const auth = getAuth();
+  const userEmail = auth.currentUser?.email || "unknown@example.com";
+  const [errors, setErrors] = useState({}); // To track validation errors
+
   // Handle image upload and set both file and preview URL
   const handleImageUpload = (e) => {
     const file = e.target.files?.[0];
@@ -36,8 +42,19 @@ export default function LostFoundForm({ onSubmit }) {
     }
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.status) newErrors.status = 'Please select a status.';
+    if (!formData.name.trim()) newErrors.name = 'Please enter the item name.';
+    if (!formData.date) newErrors.date = 'Please select a date.';
+
+    if (!formData.place.trim()) newErrors.place = 'Please enter the place.';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // Return true if no errors
+  };
   // Handle input changes
   const handleInputChange = (e) => {
+    e.preventDefault();
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -65,6 +82,10 @@ export default function LostFoundForm({ onSubmit }) {
     e.preventDefault();
     const selectedCategory = document.querySelector('input[name="group1"]:checked')?.id || '';
 
+    if (!validateForm()) {
+      return; // Stop submission if validation fails
+    }
+
     if (imagePreview) {
       // Image selected, use imagePreview as the photo URL
       saveDataToDatabase(imagePreview, selectedCategory);
@@ -84,6 +105,7 @@ export default function LostFoundForm({ onSubmit }) {
       where: formData.place,
       comments: formData.comments,
       category: category, // Use the category from the parameter
+      email: userEmail, // Include the user's email
     };
 
     try {
@@ -164,6 +186,7 @@ export default function LostFoundForm({ onSubmit }) {
               selectedStatus={formData.status}
               onStatusChange={handleStatusChange}
             />
+            {errors.status && <p className="text-danger">{errors.status}</p>}
           </div>
         </div>
 
@@ -171,7 +194,7 @@ export default function LostFoundForm({ onSubmit }) {
           <div className="panel panel-default">
             <div className="panel-body">
               <div className="form-group">
-                <label htmlFor="name" className="control-label h5" style={{ color: '#011F5B' }}>Name:</label>
+                <label htmlFor="name" className="control-label h5" style={{ color: '#011F5B' }}>Item Name:</label>
                 <input
                   type="text"
                   className="form-control"
@@ -180,11 +203,12 @@ export default function LostFoundForm({ onSubmit }) {
                   value={formData.name}
                   onChange={handleInputChange}
                 />
+                {errors.name && <p className="text-danger">{errors.name}</p>}
               </div>
 
               <div className="form-group">
                 <h5 className="card-title h5" style={{ color: '#011F5B' }}>Last Seen:</h5>
-                <label htmlFor="time" className="control-label" style={{ color: '#011F5B' }}>Time:</label>
+                {/* <label htmlFor="time" className="control-label" style={{ color: '#011F5B' }}>Time:</label>
                 <input
                   type="time"
                   className="form-control"
@@ -193,7 +217,8 @@ export default function LostFoundForm({ onSubmit }) {
                   value={formData.time}
                   onChange={handleInputChange}
                   style={{ paddingTop: '0.6rem', paddingBottom: '0.6rem', lineHeight: '1.5' }}
-                />
+                />  */}
+           
                 <label htmlFor="date" className="control-label" style={{ color: '#011F5B' }}>Date:</label>
                 <input
                   type="date"
@@ -204,6 +229,7 @@ export default function LostFoundForm({ onSubmit }) {
                   onChange={handleInputChange}
                   style={{ paddingTop: '0.6rem', paddingBottom: '0.6rem', lineHeight: '1.5' }}
                 />
+                {errors.date && <p className="text-danger">{errors.date}</p>}
               </div>
               
               <div className="form-group">
@@ -216,10 +242,12 @@ export default function LostFoundForm({ onSubmit }) {
                   value={formData.place}
                   onChange={handleInputChange}
                 />
+                {errors.place && <p className="text-danger">{errors.place}</p>}
               </div>
 
               <h5 className="card-title h5" style={{ color: '#011F5B' }}>Categories:</h5>
               <CategoryRadioButtons selectedCategory={formData.category} onChange={(e) => handleCategoryChange(e.target.id)} />
+    
             </div>
           </div>
         </div>
