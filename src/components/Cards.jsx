@@ -1,11 +1,12 @@
-// Cards.jsx
 import React from 'react';
 
-const Cards = ({ status, item, when, where, photo, comments, category, onClick }) => {
+const Cards = ({ status, item, when, where, photo, comments, category, email, onClick }) => {
   return (
     <div
-      className={`bg-gray-100 w-[300px] ${photo ? 'h-[calc(60vh-1rem)]' : 'h-[calc(30vh-1rem)]'} rounded-3xl flex flex-col overflow-hidden shadow-lg`}
-      style={{ boxShadow: '4px 0 15px rgba(0, 0, 0, 0.1), -4px 0 15px rgba(0, 0, 0, 0.1), 0 4px 15px rgba(0, 0, 0, 0.1)' }}
+      className={`bg-gray-100 w-[300px] ${photo ? 'h-[calc(60vh-1rem)]' : 'h-[calc(30vh-1rem)]'} rounded-3xl flex flex-col overflow-hidden shadow-lg transition-transform transform hover:scale-105`}
+      style={{
+        boxShadow: '4px 0 15px rgba(0, 0, 0, 0.1), -4px 0 15px rgba(0, 0, 0, 0.1), 0 4px 15px rgba(0, 0, 0, 0.1)',
+      }}
       onClick={onClick}
     >
       <div className={`h-28 w-full ${status === 'Lost' ? 'bg-cred' : 'bg-cblue'} rounded-t-3xl flex items-center`}>
@@ -20,6 +21,14 @@ const Cards = ({ status, item, when, where, photo, comments, category, onClick }
         <p><strong>Where:</strong> {where}</p>
         {category && <p><strong>Category:</strong> {category}</p>}
         {comments && <p><strong>Comments:</strong> {comments}</p>}
+        {email && (
+          <p>
+            <strong>{status === 'Lost' ? 'If Found Contact:' : 'If Lost Contact:'}</strong>{' '}
+            <a href={`mailto:${email}`} className="text-cblue underline hover:text-cred">
+              {email}
+            </a>
+          </p>
+        )}
       </div>
 
       {photo && (
