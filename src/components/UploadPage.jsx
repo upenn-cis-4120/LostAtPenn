@@ -63,17 +63,18 @@ export default function LostFoundForm({ onSubmit }) {
   // Handle form submission
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    const selectedCategory = document.querySelector('input[name="group1"]:checked')?.id || '';
 
     if (imagePreview) {
       // Image selected, use imagePreview as the photo URL
-      saveDataToDatabase(imagePreview);
+      saveDataToDatabase(imagePreview, selectedCategory);
     } else {
       // No image selected, proceed to save data without image URL
-      saveDataToDatabase('');
+      saveDataToDatabase('', selectedCategory);
     }
   };
 
-  const saveDataToDatabase = (photoURL) => {
+  const saveDataToDatabase = (photoURL, category) => {
     // Prepare data to save
     const dataToSave = {
       item: formData.name,
@@ -82,7 +83,7 @@ export default function LostFoundForm({ onSubmit }) {
       when: formData.date,
       where: formData.place,
       comments: formData.comments,
-      category: formData.category,
+      category: category, // Use the category from the parameter
     };
 
     try {
@@ -97,7 +98,7 @@ export default function LostFoundForm({ onSubmit }) {
       alert('Failed to submit report. Please try again.');
     }
   };
-  
+
   return (
     <div className="container" style={{ marginTop: '20px' }}>
       <div className="row mb-4">
@@ -218,7 +219,7 @@ export default function LostFoundForm({ onSubmit }) {
               </div>
 
               <h5 className="card-title h5" style={{ color: '#011F5B' }}>Categories:</h5>
-              <CategoryRadioButtons selectedCategory={formData.category} onCategoryChange={handleCategoryChange} />
+              <CategoryRadioButtons selectedCategory={formData.category} onChange={(e) => handleCategoryChange(e.target.id)} />
             </div>
           </div>
         </div>
