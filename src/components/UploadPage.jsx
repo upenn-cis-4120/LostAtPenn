@@ -212,7 +212,7 @@ export default function LostFoundForm({ onSubmit }) {
 
               <div className="form-group">
                 <h5 className="card-title h5" style={{ color: '#011F5B' }}>Last Seen:</h5>
-                {/* <label htmlFor="time" className="control-label" style={{ color: '#011F5B' }}>Time:</label>
+                <label htmlFor="time" className="control-label" style={{ color: '#011F5B' }}>Time:</label>
                 <input
                   type="time"
                   className="form-control"
@@ -221,7 +221,7 @@ export default function LostFoundForm({ onSubmit }) {
                   value={formData.time}
                   onChange={handleInputChange}
                   style={{ paddingTop: '0.6rem', paddingBottom: '0.6rem', lineHeight: '1.5' }}
-                />  */}
+                /> 
            
                 <label htmlFor="date" className="control-label" style={{ color: '#011F5B' }}>Date:</label>
                 <input
