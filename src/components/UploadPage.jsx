@@ -4,12 +4,13 @@ import { Upload, ArrowLeft } from 'lucide-react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CategoryRadioButtons from './CategoryRadioButtons';
 import InlineRadioButtons from './InlineRadioButtons';
-import { storage, database } from './firebase';
-import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { ref as databaseRef, push, set } from 'firebase/database';
+import { database } from './firebase';
+import { ref as databaseRef, push } from 'firebase/database';
 
 export default function LostFoundForm({ onSubmit }) {
-  const [image, setImage] = useState(null);
+  // State for the image file and its preview URL
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -22,17 +23,20 @@ export default function LostFoundForm({ onSubmit }) {
     status: '',
   });
 
+  // Handle image upload and set both file and preview URL
   const handleImageUpload = (e) => {
     const file = e.target.files?.[0];
     if (file) {
+      setImageFile(file); // Store the image file
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result);
+        setImagePreview(reader.result); // Store the preview URL
       };
       reader.readAsDataURL(file);
     }
   };
 
+  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -41,6 +45,7 @@ export default function LostFoundForm({ onSubmit }) {
     }));
   };
 
+  // Handle category and status changes
   const handleCategoryChange = (category) => {
     setFormData((prev) => ({
       ...prev,
@@ -55,28 +60,21 @@ export default function LostFoundForm({ onSubmit }) {
     }));
   };
 
-  const handleFormSubmit = async (e) => {
+  // Handle form submission
+  const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    // Upload image to Firebase Storage
-    let photoURL = '';
-    if (image) {
-      // Convert data URL to blob
-      const response = await fetch(image);
-      const blob = await response.blob();
-
-      // Create a unique filename
-      const filename = `images/${Date.now()}-${formData.name}`;
-      const storageReference = storageRef(storage, filename);
-
-      // Upload the image blob to Firebase Storage
-      await uploadBytes(storageReference, blob);
-
-      // Get the download URL of the uploaded image
-      photoURL = await getDownloadURL(storageReference);
+    if (imagePreview) {
+      // Image selected, use imagePreview as the photo URL
+      saveDataToDatabase(imagePreview);
+    } else {
+      // No image selected, proceed to save data without image URL
+      saveDataToDatabase('');
     }
+  };
 
-    // Prepare data to save to Firebase Realtime Database
+  const saveDataToDatabase = (photoURL) => {
+    // Prepare data to save
     const dataToSave = {
       item: formData.name,
       photo: photoURL,
@@ -87,16 +85,19 @@ export default function LostFoundForm({ onSubmit }) {
       category: formData.category,
     };
 
-    // Save the data to Firebase Realtime Database
-    const itemsRef = databaseRef(database, 'cards');
-    const newItemRef = push(itemsRef);
-    await set(newItemRef, dataToSave);
+    try {
+      const cardsRef = databaseRef(database, 'cards');
+      push(cardsRef, dataToSave);
 
-    // Trigger the callback and navigate to the homepage
-    onSubmit();
-    navigate('/');
+      // Trigger the callback and navigate to the homepage
+      onSubmit();
+      navigate('/');
+    } catch (error) {
+      console.error('Error adding document:', error);
+      alert('Failed to submit report. Please try again.');
+    }
   };
-
+  
   return (
     <div className="container" style={{ marginTop: '20px' }}>
       <div className="row mb-4">
@@ -123,9 +124,9 @@ export default function LostFoundForm({ onSubmit }) {
                   style={{ display: 'none' }}
                 />
                 <div className="border border-2" style={{ borderStyle: 'dashed', borderRadius: '10px', padding: '20px' }}>
-                  {image ? (
+                  {imagePreview ? (
                     <img
-                      src={image}
+                      src={imagePreview}
                       alt="Uploaded preview"
                       className="img-responsive"
                       style={{ maxHeight: '300px', width: 'auto', borderRadius: '10px' }}

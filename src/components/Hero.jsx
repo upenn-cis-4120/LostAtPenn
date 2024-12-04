@@ -4,6 +4,8 @@ import Filterbutton from './Filterbutton';
 import ReportButton from './ReportButton';
 import { database } from './firebase';
 import { ref, onValue } from 'firebase/database'
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from './firebase';
 
 const Hero = () => {
   const [cardsData, setCardsData] = useState([]);
