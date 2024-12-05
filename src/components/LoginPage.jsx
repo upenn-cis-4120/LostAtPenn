@@ -7,7 +7,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup
 } from '../components/firebase.js';
-import { ref, onValue, remove } from 'firebase/database'; // Added `remove`
+import { ref, onValue, remove } from 'firebase/database';
 import { database } from '../components/firebase.js';
 import google from '../assets/google.png';
 import logo from '../assets/logo.svg';
@@ -21,30 +21,27 @@ export default function SignInForm() {
   });
 
   const [error, setError] = useState('');
-  const [user, setUser] = useState(null); // To store the logged-in user's data
-  const [userCards, setUserCards] = useState([]); // To store the logged-in user's cards
+  const [user, setUser] = useState(null);
+  const [userCards, setUserCards] = useState([]);
   const navigate = useNavigate();
   const googleProvider = new GoogleAuthProvider();
 
   useEffect(() => {
-    // Firebase listener to check authentication state
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       setUser(currentUser);
       if (currentUser?.email) {
         fetchUserCards(currentUser.email);
       }
     });
-    return () => unsubscribe(); // Clean up the listener
+    return () => unsubscribe();
   }, []);
 
-  // Fetch user-specific cards from Firebase
   const fetchUserCards = (email) => {
     const cardsRef = ref(database, 'cards');
 
     onValue(cardsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        // Filter cards by email matching the logged-in user
         const userSpecificCards = Object.entries(data)
           .map(([key, value]) => ({ id: key, ...value }))
           .filter((card) => card.email === email);
@@ -54,12 +51,11 @@ export default function SignInForm() {
     });
   };
 
-  // Delete card from Firebase
   const handleDeleteCard = async (cardId) => {
     try {
       const cardRef = ref(database, `cards/${cardId}`);
-      await remove(cardRef); // Remove the card
-      setUserCards((prevCards) => prevCards.filter((card) => card.id !== cardId)); // Update UI
+      await remove(cardRef);
+      setUserCards((prevCards) => prevCards.filter((card) => card.id !== cardId));
     } catch (error) {
       console.error("Error deleting card:", error.message);
       alert("Failed to delete the report. Please try again.");
@@ -76,6 +72,13 @@ export default function SignInForm() {
 
   const handleEmailSignIn = async (e) => {
     e.preventDefault();
+    
+    // Check if email ends with upenn.edu
+    if (!formData.email.toLowerCase().endsWith('@upenn.edu')) {
+      setError('Must use upenn.edu email');
+      return;
+    }
+
     try {
       await signInWithEmailAndPassword(auth, formData.email, formData.password);
       navigate('/');
@@ -86,7 +89,13 @@ export default function SignInForm() {
 
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      // Check if the Google email ends with upenn.edu
+      if (!result.user.email.toLowerCase().endsWith('@upenn.edu')) {
+        await auth.signOut(); // Sign out the user if not a Penn email
+        setError('Must use upenn.edu email');
+        return;
+      }
       navigate('/');
     } catch (error) {
       setError('Google Sign-In failed. Please try again.');
@@ -96,7 +105,7 @@ export default function SignInForm() {
   const handleSignOut = async () => {
     try {
       await auth.signOut();
-      navigate('/'); // Navigate to the login page after logout
+      navigate('/');
     } catch (error) {
       console.error("Error signing out:", error.message);
     }
@@ -109,14 +118,13 @@ export default function SignInForm() {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center', // Center align horizontally
-          justifyContent: 'center', // Center align vertically
+          alignItems: 'center',
+          justifyContent: 'center',
           minHeight: '100vh',
-          textAlign: 'center', // Center text alignment
+          textAlign: 'center',
           padding: '20px',
         }}
       >
-        {/* Centered User Icon */}
         <div
           className="w-32 h-32 rounded-full flex items-center justify-center"
           style={{
@@ -148,7 +156,6 @@ export default function SignInForm() {
           Sign Out
         </button>
 
-        {/* My Reports Section */}
         <div className="mt-5" style={{ width: '100%' }}>
           <h2
             className="mb-4"
@@ -166,7 +173,7 @@ export default function SignInForm() {
               display: 'flex',
               flexWrap: 'wrap',
               gap: '20px',
-              justifyContent: 'center', // Center the reports section
+              justifyContent: 'center',
             }}
           >
             {userCards.length > 0 ? (
@@ -251,7 +258,7 @@ export default function SignInForm() {
 
           <form onSubmit={handleEmailSignIn}>
             <div className="form-group">
-              <label style={{ color: '#002D72' }}>Username/Email</label>
+              <label style={{ color: '#002D72' }}>Penn Email</label>
               <input
                 type="email"
                 className="form-control"
@@ -296,7 +303,7 @@ export default function SignInForm() {
               type="submit"
               className="btn btn-block"
               style={{
-                backgroundColor: '#8B1818',
+                backgroundColor: '#8C1A11',
                 color: 'white',
                 borderRadius: '15px',
                 padding: '10px',
