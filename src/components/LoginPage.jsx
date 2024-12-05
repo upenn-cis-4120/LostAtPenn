@@ -10,7 +10,7 @@ import {
 import { ref, onValue, remove } from 'firebase/database'; // Added `remove`
 import { database } from '../components/firebase.js';
 import google from '../assets/google.png';
-import logo from '../assets/logo.png';
+import logo from '../assets/logo.svg';
 import { User } from 'lucide-react';
 import Cards from './Cards';
 
