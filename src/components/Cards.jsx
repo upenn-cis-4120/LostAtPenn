@@ -32,7 +32,7 @@ const Cards = ({ status, item, when, where, photo, comments, category, email, on
       </div>
 
       {photo && (
-        <div className="px-6 w-full h-1/2 rounded-xl overflow-hidden">
+        <div className="px-6 mb-6 w-full h-1/2 rounded-xl overflow-hidden">
           <img className="w-full h-full object-cover" src={photo} alt="item" />
         </div>
       )}

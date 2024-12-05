@@ -1,43 +1,122 @@
 import React, { useEffect, useState } from 'react';
 import Cards from './Cards';
-import Filterbutton from './Filterbutton';
+import StatusFilter from './StatusFilter';
 import ReportButton from './ReportButton';
+import LocationFilter from './LocationFilter';
+import TypeFilter from './TypeFilter';
+import DateFilter from './DateFilter';
 import { database } from './firebase';
 import { ref, onValue } from 'firebase/database';
 
 const Hero = () => {
   const [cardsData, setCardsData] = useState([]);
-
+  const [filteredCards, setFilteredCards] = useState([]);
+  const [activeLocations, setActiveLocations] = useState([]);
+  const [activeTypes, setActiveTypes] = useState([]);
+  const [activeDateRange, setActiveDateRange] = useState({ start: '', end: '' });
+  const [activeStatus, setActiveStatus] = useState('');
   useEffect(() => {
     const cardsRef = ref(database, 'cards');
-
     onValue(cardsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        // Convert object data to an array and preserve the unique keys
-        const cardsArray = Object.entries(data).map(([key, value]) => ({
-          id: key, // Add a unique ID for each card
-          ...value,
-        })).reverse();
+        const cardsArray = Object.entries(data)
+          .map(([key, value]) => ({
+            id: key,
+            ...value,
+          }))
+          .reverse();
         setCardsData(cardsArray);
+        setFilteredCards(cardsArray);
       }
     });
   }, []);
+
+  const handleStatusFilter = (status) => {
+    if (activeStatus === status) {
+      setActiveStatus('');
+      applyAllFilters(activeTypes, activeLocations, activeDateRange, '');
+    } else {
+      setActiveStatus(status);
+      applyAllFilters(activeTypes, activeLocations, activeDateRange, status);
+    }
+  };
+
+  const handleTypeFilter = (selectedTypes) => {
+    setActiveTypes(selectedTypes);
+    applyAllFilters(selectedTypes, activeLocations, activeDateRange, activeStatus);
+  };
+
+  const handleLocationFilter = (selectedLocations) => {
+    setActiveLocations(selectedLocations);
+    applyAllFilters(activeTypes, selectedLocations, activeDateRange, activeStatus);
+  };
+
+  const handleDateFilter = (dateRange) => {
+    setActiveDateRange(dateRange);
+    applyAllFilters(activeTypes, activeLocations, dateRange, activeStatus);
+  };
+
+  const applyAllFilters = (types, locations, dateRange, status) => {
+    let filtered = cardsData;
+    
+    if (types.length > 0) {
+      filtered = filtered.filter(card => 
+        types.some(type => card.category?.toLowerCase() === type.toLowerCase())
+      );
+    }
+    
+    if (locations.length > 0) {
+      filtered = filtered.filter(card => 
+        locations.some(location => 
+          card.where?.toLowerCase().includes(location.toLowerCase())
+        )
+      );
+    }
+    
+    if (dateRange.start && dateRange.end) {
+      filtered = filtered.filter(card => {
+        const cardDate = new Date(card.when);
+        const startDate = new Date(dateRange.start);
+        const endDate = new Date(dateRange.end);
+        endDate.setHours(23, 59, 59);
+        
+        return cardDate >= startDate && cardDate <= endDate;
+      });
+    }
+
+    if (status) {
+      filtered = filtered.filter(card => card.status === status);
+    }
+    
+    setFilteredCards(filtered);
+  };
+
 
   return (
     <div className="bg-white w-screen h-screen overflow-y-auto p-4">
       <div className="flex flex-col">
         <div className="flex gap-6 mb-6">
-          <div className="ml-20 text-4xl text-cblue font-xbold flex justify-center items-center">Filters:</div>
-          <Filterbutton name="Type" color="bg-cred" textcolor="white" opt1="Electronics" opt2="Supplies" opt3="Perishable" />
-          <Filterbutton name="Date" color="bg-cred" textcolor="white" opt1="To" opt2="From" />
-          <Filterbutton name="Location" color="bg-cred" textcolor="white" />
-          <Filterbutton name="Lost" color="bg-lightblue" textcolor="cblue" />
-          <Filterbutton name="Found" color="bg-lightblue" textcolor="cblue" />
+          <div className="ml-20 text-4xl text-cblue font-xbold flex justify-center items-center">
+            Filters:
+          </div>
+          <TypeFilter onFilterChange={handleTypeFilter} />
+          <DateFilter onFilterChange={handleDateFilter} />
+          <LocationFilter onFilterChange={handleLocationFilter} />
+          <StatusFilter 
+            status="Lost"
+            isActive={activeStatus === 'Lost'}
+            onFilterChange={handleStatusFilter}
+          />
+          <StatusFilter 
+            status="Found"
+            isActive={activeStatus === 'Found'}
+            onFilterChange={handleStatusFilter}
+          />
         </div>
+
         <div className="flex flex-wrap gap-16 justify-center">
-          {/* Render cards from Firebase */}
-          {cardsData.map((card) => (
+          {filteredCards.map((card) => (
             <Cards
               key={card.id}
               status={card.status}
@@ -47,11 +126,16 @@ const Hero = () => {
               photo={card.photo}
               comments={card.comments}
               category={card.category}
-              email={card.email} // Pass email to Cards component
+              email={card.email}
             />
           ))}
+          {filteredCards.length === 0 && (
+            <div className="text-center text-gray-500 mt-8">
+              No items found for the selected location(s)
+            </div>
+          )}
         </div>
-        {/* Add the ReportButton here */}
+
         <div className="flex justify-center mt-8">
           <ReportButton />
         </div>

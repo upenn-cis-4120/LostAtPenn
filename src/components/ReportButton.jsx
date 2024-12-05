@@ -13,7 +13,7 @@ const ReportButton = () => {
         //change above
         transform: 'translateX(-50%)',
         zIndex: 1000,
-      }}szz
+      }}
     >
       <button
         className="btn btn-danger btn-lg px-9 py-7 text-3xl font-bold shadow-lg hover:scale-105 transition-transform duration-200"
