@@ -73,12 +73,16 @@ export default function SignInForm() {
   const handleEmailSignIn = async (e) => {
     e.preventDefault();
     
-    // Check if email ends with upenn.edu
-    if (!formData.email.toLowerCase().endsWith('@upenn.edu')) {
-      setError('Must use upenn.edu email');
+    const validDomains = ['upenn.edu', 'seas.upenn.edu', 'sas.upenn.edu', 'wharton.upenn.edu'];
+    const isValidPennEmail = validDomains.some(domain => 
+      formData.email.toLowerCase().endsWith('@' + domain)
+    );
+    
+    if (!isValidPennEmail) {
+      setError('Please use your Penn email (@upenn.edu, @seas.upenn.edu, @sas.upenn.edu, or @wharton.upenn.edu)');
       return;
     }
-
+    
     try {
       await signInWithEmailAndPassword(auth, formData.email, formData.password);
       navigate('/');
@@ -86,14 +90,18 @@ export default function SignInForm() {
       setError('Invalid email or password. Please try again.');
     }
   };
-
+  
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      // Check if the Google email ends with upenn.edu
-      if (!result.user.email.toLowerCase().endsWith('@upenn.edu')) {
-        await auth.signOut(); // Sign out the user if not a Penn email
-        setError('Must use upenn.edu email');
+      const validDomains = ['upenn.edu', 'seas.upenn.edu', 'sas.upenn.edu', 'wharton.upenn.edu'];
+      const isValidPennEmail = validDomains.some(domain => 
+        result.user.email.toLowerCase().endsWith('@' + domain)
+      );
+  
+      if (!isValidPennEmail) {
+        await auth.signOut();
+        setError('Please use your Penn email (@upenn.edu, @seas.upenn.edu, @sas.upenn.edu, or @wharton.upenn.edu)');
         return;
       }
       navigate('/');
